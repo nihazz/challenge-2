@@ -7,34 +7,34 @@ jobs:
     name: Lint and Test
     runs-on: ubuntu-latest
     steps:
-     - name: Checkout code
-       uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-     - name: Set up Python
-       uses: actions/setup-python@v5
-       with:
-        python-version: "3.13"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
 
-     - name: Install requirements
-       run : pip install flake8 pylint
+      - name: Install requirements
+        run: pip install flake8 pylint
 
-     - name: Lint hello.py
-       run: |
-        flake8 hello.py
-        pylint hello.py
+      - name: Lint hello.py
+        run: |
+          flake8 hello.py
+          pylint hello.py
 
-     - name: Test the script
-       run: python hello.py | grep -i hello || exit 1
+      - name: Test the script
+        run: python hello.py | grep -i hello || exit 1
 
   build-and-push:
     name: Build and Push Container
     needs: lint-and-test
     runs-on: ubuntu-latest
-    permissions: 
+    permissions:
       packages: write
       contents: read
 
-      steps:
+    steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
@@ -91,4 +91,3 @@ jobs:
 
       - name: Run the Image
         run: docker run --rm ghcr.io/${{ github.repository }}:${{ github.sha }} | grep -i hello || exit 1
-               
